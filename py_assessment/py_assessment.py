@@ -53,7 +53,26 @@ class Calculator():
         xy_btn = tk.Button(background,text="x{}".format(self.get_super('y')),width=1,height=1,font=("Helvetica",16)).grid(row=2,column=3,sticky='NSEW')
         ex_btn = tk.Button(background,text="e{}".format(self.get_super('x')),width=1,height=1,font=("Helvetica",16)).grid(row=2,column=4,sticky='NSEW')       
         tenx_btn = tk.Button(background,text="10{}".format(self.get_super('x')),width=1,height=1,font=("Helvetica",16)).grid(row=2,column=5,sticky='NSEW')
-   
+        # Buttons
+        buttons = [
+            "(", ")", "mc", "m+", "m-", "mr", "AC", "±", "%", "÷",
+            "2{}".format(self.get_super('nd')), "x{}".format(self.get_super('2')), "x{}".format(self.get_super('3')), "x{}".format(self.get_super('y')), "e{}".format(self.get_super('x')), "10{}".format(self.get_super('x')), "7", "8", "9", "×",
+            "", "", "", "{}√{}".format(self.get_super('y'),self.get_sub('x')), "ln", "log{}".format(self.get_sub('10')), "4", "5", "6", "-",
+            "", "", "", "", "", "", "", "", ""
+        ]
+
+        row = 1
+        col = 0
+        for button in buttons:
+            btn = tk.Button(self.root, text=button, font=("Helvetica", 16), width=5, height=2)
+            btn.grid(row=row, column=col, padx=5, pady=5)
+            btn.bind("<Button-1>", self.button_click)
+            col += 1
+            if col > 10:
+                col = 0
+                row += 1
+
+
     def get_super(self,x):
         normal = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-=()"
         super_s = "ᴬᴮᶜᴰᴱᶠᴳᴴᴵᴶᴷᴸᴹᴺᴼᴾQᴿˢᵀᵁⱽᵂˣʸᶻᵃᵇᶜᵈᵉᶠᵍʰᶦʲᵏˡᵐⁿᵒᵖ۹ʳˢᵗᵘᵛʷˣʸᶻ⁰¹²³⁴⁵⁶⁷⁸⁹⁺⁻⁼⁽⁾"
@@ -75,4 +94,6 @@ Calculator()
 root.title("Calculator")
 root.geometry("575x320")
 root.wm_attributes('-alpha', 0.92)
+root.configure(background='lightgrey')
+root.resizable(False,False)
 root.mainloop()
