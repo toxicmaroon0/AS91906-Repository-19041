@@ -69,6 +69,7 @@ class Calculator():
                 entry_content = entry_content.replace('%', '/100')
                 entry_content = entry_content.replace('±','*(-1)')
                 entry_content = entry_content.replace("{}/x".format(self.get_super('1')),'')
+                entry_content = entry_content.replace('π',str(math.pi))
                 result = eval(entry_content)
                 self.entry_field.delete(0, tk.END)
                 self.entry_field.insert(tk.END, str(result))
@@ -77,6 +78,16 @@ class Calculator():
                 messagebox.showerror("Error", "Invalid Expression")
         else:
             self.entry_field.insert(tk.END,text)
+        if text == 'Rand':
+            try:
+                rand = random(0,1)
+                rand = float("{:.15f}".format(rand))
+                entry_content = entry_content.replace('Rand',rand)
+                self.entry_field.delete(0,tk.END)
+                self.entry_field.insert(tk.END,str(entry_content))
+            except:
+                messagebox.showerror("Error","Unknown error")
+            
         
         
         if text == "AC":
@@ -88,10 +99,9 @@ class Calculator():
                      "{}/x".format(self.get_super('1')), "{}√x".format(self.get_super('2')), "{}√x".format(self.get_super('3')),
                      "x{}".format(self.get_super('2')), "x{}".format(self.get_super('3')), "x{}".format(self.get_super('y')),
                      "e{}".format(self.get_super('x')), "10{}".format(self.get_super('x'))]
-        for operator in operators:
-            if text != operator and self.is_final == 1:
-                self.entry_field.delete(0,tk.END)
-                self.is_final = 0
+        if text not in operators and self.is_final == 1:
+            self.entry_field.delete(0,tk.END)
+            self.is_final = 0
     
         
 
