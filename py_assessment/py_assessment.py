@@ -1,15 +1,13 @@
 #Tkinter bits
 import tkinter as tk
-import tkinter.font as font
-import tkmacosx as tkm
+#import tkinter.font as font
+#import tkmacosx as tkm
 from tkinter import messagebox
 
 #Other things
 import math
 import numpy as np
 import random
-
-#State variables & Constants
 
 
 #State Class and subroutines
@@ -45,6 +43,18 @@ class Calculator():
         # Entry Field
         self.entry_field = tk.Entry(root,font=("Helvetica", 20), justify="right")
         self.entry_field.grid(row=0, column=0, columnspan=10,sticky="NSEW")
+        
+        for x in range(0,9):
+            if x <= 1:
+                root.rowconfigure(x, weight=1)
+                continue
+            if x == 0:
+                root.columnconfigure(x, weight=1)
+                continue
+            if x <= 5:
+                background.rowconfigure(x, weight=1)
+                continue
+            background.columnconfigure(x, weight=1)
 
     def button_click(self, event):
         button = event.widget
@@ -81,6 +91,8 @@ class Calculator():
         for operator in operators:
             if text != operator and self.is_final == 1:
                 self.entry_field.delete(0,tk.END)
+                self.is_final = 0
+    
         
 
 
@@ -100,9 +112,9 @@ class Calculator():
         
 #Define Window name
 root = tk.Tk()
-#Create Canvas
-background = tk.Canvas(root,)
-background.grid(row=1,column=0,columnspan=10,rowspan=5,sticky="NSEW")
+#Create frame
+background = tk.Frame(root)
+background.grid(row=1,column=0,sticky="NSEW")
 #Call class logic and buttons
 Calculator()
 #Configure window
@@ -111,5 +123,6 @@ root.geometry("575x320")
 root.wm_attributes('-alpha', 0.92)
 background.configure(background='lightgrey')
 root.resizable(False,False)
+root.columnconfigure(0, weight=1)
 #Refresh window
 root.mainloop()
