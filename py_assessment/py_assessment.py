@@ -104,9 +104,21 @@ class Calculator():
                 if 'x{}'.format(self.get_super('3')) in entry_content:
                     entry_content = entry_content.replace('x{}'.format(self.get_super('3')), '**3')
                 if entry_content.find('{}√x'.format(self.get_super('2'))) != 0:
-                    entry_content = entry_content.replace('{}√x'.format(self.get_super('2')),'*'+math.sqrt(entry_content))
-                elif entry_content.find('{}√x'.format(self.get_super('2'))) == 0:
-                    entry_content = entry_content.replace('{}√x'.format(self.get_super('2')),math.sqrt(entry_content))
+                    range_init = entry_content.find('{}√x'.format(self.get_super('2'))) +1
+                    range_end = entry_content.find(')',range_init)
+                    entry_content = entry_content.replace('{}√x'.format(self.get_super('2')),'*')
+                    result = str(math.sqrt(entry_content[range(range_init,range_end)]))
+                    self.is_final = 1
+                if entry_content.find('{}√x'.format(self.get_super('2'))) == 0:
+                    entry_content = entry_content.replace('{}√x'.format(self.get_super('2')),'')
+                    result = str(math.sqrt(int(entry_content)))
+                    self.is_final = 1
+                if entry_content.find('{}√x'.format(self.get_super('2'))) != 0 and entry_content.find('{}√x'.format(self.get_super('2')))-1 == entry_content.find('(',1,entry_content.find('{}√x'.format(self.get_super('2')))):
+                    range_init = entry_content.find('{}√x'.format(self.get_super('2'))) +1
+                    range_end = entry_content.find(')',range_init)-1
+                    entry_content = entry_content.replace('{}√x'.format(self.get_super('2')),'')
+                    result = str(math.sqrt(entry_content[range(range_init,range_end)]))
+                    self.is_final = 1
                 
                 
                 if self.is_final == 0:

@@ -38,3 +38,14 @@ def CreateToolTip(widget, text):
         toolTip.hidetip()
     widget.bind('<Enter>', enter)
     widget.bind('<Leave>', leave)
+    
+
+'''
+#Template
+button = Button(root, text = 'click mem')
+button.pack()
+CreateToolTip(button, text = 'Hello World\n'
+                 'This is how tip looks like.'
+                 'Best part is, it\'s not a menu.\n'
+                 'Purely tipbox.')
+'''
