@@ -84,9 +84,12 @@ class Calculator():
                 #if entry_content.find('π') != 0 and entry_content.index(entry_content.find('π')-1) not in operators:
                 if entry_content.find('π') != 0: 
                     entry_content = entry_content.replace('π','*'+str(math.pi))
-                else:
+                elif entry_content.find('π') == 0:
                     entry_content = entry_content.replace('π',str(math.pi))
-                entry_content = entry_content.replace('e',str(math.e))
+                if entry_content.find('e') != 0:
+                    entry_content = entry_content.replace('e','*'+str(math.e))
+                elif entry_content.find('e') == 0:
+                    entry_content = entry_content.replace('e',str(math.e))
                 entry_content = entry_content.replace('EE','**')
                 if 'ln' in entry_content:
                     entry_content = entry_content.replace('ln','')
@@ -96,6 +99,16 @@ class Calculator():
                     entry_content = entry_content.replace('log{}'.format(self.get_sub('10')),'')
                     result = math.log10(int(entry_content))
                     self.is_final = 1
+                if 'x{}'.format(self.get_super('2')) in entry_content:
+                    entry_content = entry_content.replace('x{}'.format(self.get_super('2')), '**2')
+                if 'x{}'.format(self.get_super('3')) in entry_content:
+                    entry_content = entry_content.replace('x{}'.format(self.get_super('3')), '**3')
+                if entry_content.find('{}√x'.format(self.get_super('2'))) != 0:
+                    entry_content = entry_content.replace('{}√x'.format(self.get_super('2')),'*'+math.sqrt(entry_content))
+                elif entry_content.find('{}√x'.format(self.get_super('2'))) == 0:
+                    entry_content = entry_content.replace('{}√x'.format(self.get_super('2')),math.sqrt(entry_content))
+                
+                
                 if self.is_final == 0:
                     result = eval(entry_content)
                 self.entry_field.delete(0, tk.END)
