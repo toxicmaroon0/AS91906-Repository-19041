@@ -7,7 +7,7 @@ from tkinter import messagebox
 #Other things
 import math
 import numpy as np
-import random
+#from py_tooltip import *
 
 
 #State Class and subroutines
@@ -39,6 +39,7 @@ class Calculator():
             if col > 9:
                 col = 0
                 row += 1
+        
                 
         # Entry Field
         self.entry_field = tk.Entry(root,font=("Helvetica", 20), justify="right")
@@ -56,6 +57,9 @@ class Calculator():
                 continue
             background.columnconfigure(x, weight=1)
 
+        #Button Tooltips
+        #CreateToolTip(,'Exponential notation')
+
     def button_click(self, event):
         button = event.widget
         text = button["text"]
@@ -68,8 +72,15 @@ class Calculator():
                 entry_content = entry_content.replace('÷', '/')
                 entry_content = entry_content.replace('%', '/100')
                 entry_content = entry_content.replace('±','*(-1)')
-                entry_content = entry_content.replace("{}/x".format(self.get_super('1')),'')
+                if '{}'.format(self.get_super('1')) in entry_content:
+                    entry_content = entry_content.replace("{}/x".format(self.get_super('1')),'')
+                    entry_content = '1/'+entry_content
+                if 'e{}'.format(self.get_super('x')) in entry_content:
+                    entry_content = entry_content.replace("e{}".format(self.get_super('x')),'')
+                    entry_content = 'e**'+entry_content
                 entry_content = entry_content.replace('π',str(math.pi))
+                entry_content = entry_content.replace('e',str(math.e))
+                entry_content = entry_content.replace('EE','**')
                 result = eval(entry_content)
                 self.entry_field.delete(0, tk.END)
                 self.entry_field.insert(tk.END, str(result))
@@ -87,9 +98,13 @@ class Calculator():
         operators = ["+", "-", "÷", "×", "±", "%", "=", "x!", "sin", "cos", "tan", "sinh", "cosh", "tanh",
                      "{}/x".format(self.get_super('1')), "{}√x".format(self.get_super('2')), "{}√x".format(self.get_super('3')),
                      "x{}".format(self.get_super('2')), "x{}".format(self.get_super('3')), "x{}".format(self.get_super('y')),
-                     "e{}".format(self.get_super('x')), "10{}".format(self.get_super('x'))]
+                     "e{}".format(self.get_super('x')), "10{}".format(self.get_super('x')),"{}/x".format(self.get_super('1')), 
+                     "{}√x".format(self.get_super('2')), "{}√x".format(self.get_super('3')), "{}√x".format(self.get_super('y')), 
+                     "ln", "log{}".format(self.get_sub('10'))]
         if text not in operators and self.is_final == 1:
             self.entry_field.delete(0,tk.END)
+            self.is_final = 0
+        if text in operators:
             self.is_final = 0
         
         #Quit Button
