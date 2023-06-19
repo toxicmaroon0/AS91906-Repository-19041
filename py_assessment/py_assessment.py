@@ -7,8 +7,11 @@ from tkinter import messagebox
 #Other things
 import math
 import numpy as np
-#from py_tooltip import *
+from py_tooltip import *
+from py_numeric_parser_class import *
 
+#Create objects / instanses
+nsp = NumericStringParser()
 
 #State Class and subroutines
 class Calculator():
@@ -63,71 +66,76 @@ class Calculator():
     def button_click(self, event):
         button = event.widget
         text = button["text"]
+        res_str = ''
+        res_int = 0
 
         if text == "=":
-            try:
-                self.is_final = 0
-                entry_content = self.entry_field.get()
-                entry_content = entry_content.replace('×', '*')
-                entry_content = entry_content.replace('÷', '/')
-                entry_content = entry_content.replace('%', '/100')
-                entry_content = entry_content.replace('±','*(-1)')
-                if '{}'.format(self.get_super('1')) in entry_content:
-                    entry_content = entry_content.replace("{}/x".format(self.get_super('1')),'')
-                    entry_content = '1/'+entry_content
-                if 'e{}'.format(self.get_super('x')) in entry_content:
-                    entry_content = entry_content.replace("e{}".format(self.get_super('x')),'')
-                    entry_content = 'e**'+entry_content
-                if '10{}'.format(self.get_super('x')) in entry_content:
-                    entry_content = entry_content.replace("10{}".format(self.get_super('x')),'')
-                    entry_content = '10**'+entry_content
-                #if entry_content.find('π') != 0 and entry_content.index(entry_content.find('π')-1) not in operators:
-                if entry_content.find('π') != 0: 
-                    entry_content = entry_content.replace('π','*'+str(math.pi))
-                elif entry_content.find('π') == 0:
-                    entry_content = entry_content.replace('π',str(math.pi))
-                if entry_content.find('e') != 0:
-                    entry_content = entry_content.replace('e','*'+str(math.e))
-                elif entry_content.find('e') == 0:
-                    entry_content = entry_content.replace('e',str(math.e))
-                entry_content = entry_content.replace('EE','**')
-                if 'ln' in entry_content:
-                    entry_content = entry_content.replace('ln','')
-                    result = math.log(int(entry_content))
-                    self.is_final = 1
-                if 'log{}'.format(self.get_sub('10')) in entry_content:
-                    entry_content = entry_content.replace('log{}'.format(self.get_sub('10')),'')
-                    result = math.log10(int(entry_content))
-                    self.is_final = 1
-                if 'x{}'.format(self.get_super('2')) in entry_content:
-                    entry_content = entry_content.replace('x{}'.format(self.get_super('2')), '**2')
-                if 'x{}'.format(self.get_super('3')) in entry_content:
-                    entry_content = entry_content.replace('x{}'.format(self.get_super('3')), '**3')
-                if entry_content.find('{}√x'.format(self.get_super('2'))) != 0:
-                    range_init = entry_content.find('{}√x'.format(self.get_super('2'))) +1
-                    range_end = entry_content.find(')',range_init)
-                    entry_content = entry_content.replace('{}√x'.format(self.get_super('2')),'*')
-                    result = str(math.sqrt(entry_content[range(range_init,range_end)]))
-                    self.is_final = 1
-                if entry_content.find('{}√x'.format(self.get_super('2'))) == 0:
-                    entry_content = entry_content.replace('{}√x'.format(self.get_super('2')),'')
-                    result = str(math.sqrt(int(entry_content)))
-                    self.is_final = 1
-                if entry_content.find('{}√x'.format(self.get_super('2'))) != 0 and entry_content.find('{}√x'.format(self.get_super('2')))-1 == entry_content.find('(',1,entry_content.find('{}√x'.format(self.get_super('2')))):
-                    range_init = entry_content.find('{}√x'.format(self.get_super('2'))) +1
-                    range_end = entry_content.find(')',range_init)-1
-                    entry_content = entry_content.replace('{}√x'.format(self.get_super('2')),'')
-                    result = str(math.sqrt(entry_content[range(range_init,range_end)]))
-                    self.is_final = 1
-                
-                
-                if self.is_final == 0:
-                    result = eval(entry_content)
-                self.entry_field.delete(0, tk.END)
-                self.entry_field.insert(tk.END, str(result))
+            self.is_final = 0
+            entry_content = self.entry_field.get()
+            entry_content = entry_content.replace('×', '*')
+            entry_content = entry_content.replace('÷', '/')
+            #entry_content = entry_content.replace('%', '/100')
+            entry_content = entry_content.replace('±','*(-1)')
+            if '{}'.format(self.get_super('1')) in entry_content:
+                entry_content = entry_content.replace("{}/x".format(self.get_super('1')),'')
+                entry_content = '1/'+entry_content
+            if 'e{}'.format(self.get_super('x')) in entry_content:
+                entry_content = entry_content.replace("e{}".format(self.get_super('x')),'')
+                entry_content = 'e**'+entry_content
+            if '10{}'.format(self.get_super('x')) in entry_content:
+                entry_content = entry_content.replace("10{}".format(self.get_super('x')),'')
+                entry_content = '10**'+entry_content
+            #if entry_content.find('π') != 0 and entry_content.index(entry_content.find('π')-1) not in operators:
+            if entry_content.find('π') != 0: 
+                entry_content = entry_content.replace('π','*'+str(math.pi))
+            elif entry_content.find('π') == 0:
+                entry_content = entry_content.replace('π',str(math.pi))
+            if entry_content.find('e') != 0:
+                entry_content = entry_content.replace('e','*'+str(math.e))
+            elif entry_content.find('e') == 0:
+                entry_content = entry_content.replace('e',str(math.e))
+            entry_content = entry_content.replace('EE','**')
+            if 'ln' in entry_content:
+                entry_content = entry_content.replace('ln','')
+                result = math.log(int(entry_content))
                 self.is_final = 1
-            except:
-                messagebox.showerror("Error", "Invalid Expression")
+            if 'log{}'.format(self.get_sub('10')) in entry_content:
+                entry_content = entry_content.replace('log{}'.format(self.get_sub('10')),'')
+                result = math.log10(int(entry_content))
+                self.is_final = 1
+            if 'x{}'.format(self.get_super('2')) in entry_content:
+                entry_content = entry_content.replace('x{}'.format(self.get_super('2')), '**2')
+            if 'x{}'.format(self.get_super('3')) in entry_content:
+                entry_content = entry_content.replace('x{}'.format(self.get_super('3')), '**3')
+            if entry_content.find('{}√x'.format(self.get_super('2'))) != 0:
+                range_init = entry_content.find('{}√x'.format(self.get_super('2'))) +1
+                range_end = entry_content.find(')',range_init)
+                for char in range(range_init,range_end):
+                    res_str = res_str+entry_content[char]
+                    res_int = int(res_str)
+                entry_content = entry_content.replace('{}√x'.format(self.get_super('2')),'*')
+                result = str(math.sqrt(int(res_int)))
+                self.is_final = 1
+            elif entry_content.find('{}√x'.format(self.get_super('2'))) == 0:
+                entry_content = entry_content.replace('{}√x'.format(self.get_super('2')),'')
+                result = str(math.sqrt(int(entry_content)))
+                self.is_final = 1
+            elif entry_content.find('{}√x'.format(self.get_super('2'))) != 0 and entry_content.find('{}√x'.format(self.get_super('2')))-1 == entry_content.find('(',1,entry_content.find('{}√x'.format(self.get_super('2')))):
+                range_init = entry_content.find('{}√x'.format(self.get_super('2'))) +1
+                range_end = entry_content.find(')',range_init)-1
+                for char in range(range_init,range_end):
+                    res_str = res_str+entry_content[char]
+                    res_int = int(res_str)
+                entry_content = entry_content.replace('{}√x'.format(self.get_super('2')),'')
+                result = str(math.sqrt(int(res_int)))
+                self.is_final = 1
+                
+                
+            if self.is_final == 0:
+                result = nsp.eval(entry_content)
+            self.entry_field.delete(0, tk.END)
+            self.entry_field.insert(tk.END, str(result))
+            self.is_final = 1
         else:
             self.entry_field.insert(tk.END,text)
         
