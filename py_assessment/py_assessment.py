@@ -24,7 +24,7 @@ class Calculator():
             "2{}".format(self.get_super('nd')), "x{}".format(self.get_super('2')), "x{}".format(self.get_super('3')), "x{}".format(self.get_super('y')), "e{}".format(self.get_super('x')), "10{}".format(self.get_super('x')), "7", "8", "9", "×",
             "{}/x".format(self.get_super('1')), "{}√x".format(self.get_super('2')), "{}√x".format(self.get_super('3')), "{}√x".format(self.get_super('y')), "ln", "log{}".format(self.get_sub('10')), "4", "5", "6", "-",
             "x!", "sin", "cos", "tan", "e", "EE", "1", "2", "3", "+",
-            "Rad", "sinh", "cosh", "tanh", "π", "Rand", "0", ".", "="
+            "Rad", "sinh", "cosh", "tanh", "π", "Quit", "0", ".", "="
         ]
 
         
@@ -78,17 +78,6 @@ class Calculator():
                 messagebox.showerror("Error", "Invalid Expression")
         else:
             self.entry_field.insert(tk.END,text)
-        if text == 'Rand':
-            try:
-                rand = random(0,1)
-                rand = float("{:.15f}".format(rand))
-                entry_content = entry_content.replace('Rand',rand)
-                self.entry_field.delete(0,tk.END)
-                self.entry_field.insert(tk.END,str(entry_content))
-            except:
-                messagebox.showerror("Error","Unknown error")
-            
-        
         
         if text == "AC":
             try:
@@ -102,6 +91,13 @@ class Calculator():
         if text not in operators and self.is_final == 1:
             self.entry_field.delete(0,tk.END)
             self.is_final = 0
+        
+        #Quit Button
+        if text == "Quit":
+            try:
+                root.destroy()
+            except:
+                root.destroy()
     
         
 
