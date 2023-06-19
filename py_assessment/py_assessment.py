@@ -78,10 +78,26 @@ class Calculator():
                 if 'e{}'.format(self.get_super('x')) in entry_content:
                     entry_content = entry_content.replace("e{}".format(self.get_super('x')),'')
                     entry_content = 'e**'+entry_content
-                entry_content = entry_content.replace('π',str(math.pi))
+                if '10{}'.format(self.get_super('x')) in entry_content:
+                    entry_content = entry_content.replace("10{}".format(self.get_super('x')),'')
+                    entry_content = '10**'+entry_content
+                #if entry_content.find('π') != 0 and entry_content.index(entry_content.find('π')-1) not in operators:
+                if entry_content.find('π') != 0: 
+                    entry_content = entry_content.replace('π','*'+str(math.pi))
+                else:
+                    entry_content = entry_content.replace('π',str(math.pi))
                 entry_content = entry_content.replace('e',str(math.e))
                 entry_content = entry_content.replace('EE','**')
-                result = eval(entry_content)
+                if 'ln' in entry_content:
+                    entry_content = entry_content.replace('ln','')
+                    result = math.log(int(entry_content))
+                    self.is_final = 1
+                if 'log{}'.format(self.get_sub('10')) in entry_content:
+                    entry_content = entry_content.replace('log{}'.format(self.get_sub('10')),'')
+                    result = math.log10(int(entry_content))
+                    self.is_final = 1
+                if self.is_final == 0:
+                    result = eval(entry_content)
                 self.entry_field.delete(0, tk.END)
                 self.entry_field.insert(tk.END, str(result))
                 self.is_final = 1
@@ -144,6 +160,5 @@ root.geometry("575x320")
 root.wm_attributes('-alpha', 0.92)
 background.configure(background='lightgrey')
 root.resizable(False,False)
-root.columnconfigure(0, weight=1)
 #Refresh window
 root.mainloop()
