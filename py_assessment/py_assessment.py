@@ -62,20 +62,28 @@ class Calculator():
 
         #Button Tooltips
         #CreateToolTip(,'Exponential notation')
+        
+        #Lists
+        self.operators = ["+", "-", "÷", "×", "±", "%", "=", "x!", "sin", "cos", "tan", "sinh", "cosh", "tanh",
+                     "{}/x".format(self.get_super('1')), "{}√x".format(self.get_super('2')), "{}√x".format(self.get_super('3')),
+                     "x{}".format(self.get_super('2')), "x{}".format(self.get_super('3')), "x{}".format(self.get_super('y')),
+                     "e{}".format(self.get_super('x')), "10{}".format(self.get_super('x')),"{}/x".format(self.get_super('1')), 
+                     "{}√x".format(self.get_super('2')), "{}√x".format(self.get_super('3')), "{}√x".format(self.get_super('y')), 
+                     "ln", "log{}".format(self.get_sub('10'))]
 
     def button_click(self, event):
         button = event.widget
         text = button["text"]
         res_str = ''
-        res_int = 0
 
         if text == "=":
             self.is_final = 0
             entry_content = self.entry_field.get()
             entry_content = entry_content.replace('×', '*')
             entry_content = entry_content.replace('÷', '/')
-            #entry_content = entry_content.replace('%', '/100')
+            entry_content = entry_content.replace('%', '/100')
             entry_content = entry_content.replace('±','*(-1)')
+            entry_content = entry_content.replace('EE','**')
             if '{}'.format(self.get_super('1')) in entry_content:
                 entry_content = entry_content.replace("{}/x".format(self.get_super('1')),'')
                 entry_content = '1/'+entry_content
@@ -86,15 +94,14 @@ class Calculator():
                 entry_content = entry_content.replace("10{}".format(self.get_super('x')),'')
                 entry_content = '10**'+entry_content
             #if entry_content.find('π') != 0 and entry_content.index(entry_content.find('π')-1) not in operators:
-            if entry_content.find('π') != 0: 
+            if entry_content.find('π') > 0: 
                 entry_content = entry_content.replace('π','*'+str(math.pi))
             elif entry_content.find('π') == 0:
                 entry_content = entry_content.replace('π',str(math.pi))
-            if entry_content.find('e') != 0:
+            if entry_content.find('e') > 0:
                 entry_content = entry_content.replace('e','*'+str(math.e))
             elif entry_content.find('e') == 0:
                 entry_content = entry_content.replace('e',str(math.e))
-            entry_content = entry_content.replace('EE','**')
             if 'ln' in entry_content:
                 entry_content = entry_content.replace('ln','')
                 result = math.log(int(entry_content))
@@ -107,27 +114,18 @@ class Calculator():
                 entry_content = entry_content.replace('x{}'.format(self.get_super('2')), '**2')
             if 'x{}'.format(self.get_super('3')) in entry_content:
                 entry_content = entry_content.replace('x{}'.format(self.get_super('3')), '**3')
-            if entry_content.find('{}√x'.format(self.get_super('2'))) != 0:
-                range_init = entry_content.find('{}√x'.format(self.get_super('2'))) +1
-                range_end = entry_content.find(')',range_init)
+            if entry_content.find('{}√x'.format(self.get_super('2'))) > 0 and entry_content.find('{}√x'.format(self.get_super('2')))-1 not in self.operators:
+                range_init = entry_content.find('{}√x'.format(self.get_super('2')))
+                range_end = (entry_content.find(')',range_init)-4)
+                entry_content = entry_content.replace('{}√x'.format(self.get_super('2')),'*')
                 for char in range(range_init,range_end):
                     res_str = res_str+entry_content[char]
-                    res_int = int(res_str)
-                entry_content = entry_content.replace('{}√x'.format(self.get_super('2')),'*')
+                    res_int = res_str
                 result = str(math.sqrt(int(res_int)))
                 self.is_final = 1
             elif entry_content.find('{}√x'.format(self.get_super('2'))) == 0:
                 entry_content = entry_content.replace('{}√x'.format(self.get_super('2')),'')
                 result = str(math.sqrt(int(entry_content)))
-                self.is_final = 1
-            elif entry_content.find('{}√x'.format(self.get_super('2'))) != 0 and entry_content.find('{}√x'.format(self.get_super('2')))-1 == entry_content.find('(',1,entry_content.find('{}√x'.format(self.get_super('2')))):
-                range_init = entry_content.find('{}√x'.format(self.get_super('2'))) +1
-                range_end = entry_content.find(')',range_init)-1
-                for char in range(range_init,range_end):
-                    res_str = res_str+entry_content[char]
-                    res_int = int(res_str)
-                entry_content = entry_content.replace('{}√x'.format(self.get_super('2')),'')
-                result = str(math.sqrt(int(res_int)))
                 self.is_final = 1
                 
                 
@@ -144,16 +142,11 @@ class Calculator():
                 self.entry_field.delete(0, tk.END)
             except:
                 messagebox.showerror("Error", "Could not Clear")
-        operators = ["+", "-", "÷", "×", "±", "%", "=", "x!", "sin", "cos", "tan", "sinh", "cosh", "tanh",
-                     "{}/x".format(self.get_super('1')), "{}√x".format(self.get_super('2')), "{}√x".format(self.get_super('3')),
-                     "x{}".format(self.get_super('2')), "x{}".format(self.get_super('3')), "x{}".format(self.get_super('y')),
-                     "e{}".format(self.get_super('x')), "10{}".format(self.get_super('x')),"{}/x".format(self.get_super('1')), 
-                     "{}√x".format(self.get_super('2')), "{}√x".format(self.get_super('3')), "{}√x".format(self.get_super('y')), 
-                     "ln", "log{}".format(self.get_sub('10'))]
-        if text not in operators and self.is_final == 1:
+        
+        if text not in self.operators and self.is_final == 1:
             self.entry_field.delete(0,tk.END)
             self.is_final = 0
-        if text in operators:
+        if text in self.operators:
             self.is_final = 0
         
         #Quit Button

@@ -10,8 +10,9 @@ import numpy as np
 from py_tooltip import *
 from py_numeric_parser_class import *
 
-#Create objects / instanses
+#Create objects / instanses / CONSTANTS
 nsp = NumericStringParser()
+RESIZE_YN = 1
 
 #State Class and subroutines
 class Calculator():
@@ -43,7 +44,7 @@ class Calculator():
                 
         # Entry Field
         self.entry_field = tk.Entry(root,font=("Helvetica", 20), justify="right")
-        self.entry_field.grid(row=0, column=0, columnspan=3,sticky="NSEW")
+        self.entry_field.grid(row=0, column=0,sticky="NSEW")
         
         for x in range(0,4):
             if x <= 1:
@@ -55,7 +56,9 @@ class Calculator():
             if x <= 4:
                 background.rowconfigure(x, weight=1)
                 continue
-            background.columnconfigure(x, weight=1)
+            if x <= 3:
+                background.columnconfigure(x, weight=1)
+                continue
 
         #Button Tooltips
         #CreateToolTip(,'Exponential notation')
@@ -112,9 +115,9 @@ background.grid(row=1,column=0,sticky="NSEW")
 Calculator()
 #Configure window
 root.title("Calculator")
-root.geometry("575x320")
+root.geometry("250x320")
 root.wm_attributes('-alpha', 0.92)
 background.configure(background='lightgrey')
-root.resizable(False,False)
+root.resizable(RESIZE_YN,RESIZE_YN)
 #Refresh window
 root.mainloop()
