@@ -12,7 +12,7 @@ from py_numeric_parser_class import *
 
 #Create objects / instanses / CONSTANTS
 nsp = NumericStringParser()
-RESIZE_YN = 1
+RESIZE_YN = 0
 
 #State Class and subroutines
 class Calculator():
@@ -43,7 +43,7 @@ class Calculator():
         
                 
         # Entry Field
-        self.entry_field = tk.Entry(root,font=("Helvetica", 20), justify="right")
+        self.entry_field = tk.Entry(root,font=("Helvetica", 20), justify="right",width=20)
         self.entry_field.grid(row=0, column=0,sticky="NSEW")
         
         for x in range(0,4):
@@ -108,16 +108,16 @@ class Calculator():
         
 #Define Window name
 root = tk.Tk()
-#Create frame
+#Create & configure frame
 background = tk.Frame(root)
 background.grid(row=1,column=0,sticky="NSEW")
+background.configure(background='lightgrey')
 #Call class logic and buttons
 Calculator()
 #Configure window
 root.title("Calculator")
 root.geometry("250x320")
 root.wm_attributes('-alpha', 0.92)
-background.configure(background='lightgrey')
 root.resizable(RESIZE_YN,RESIZE_YN)
 #Refresh window
 root.mainloop()
