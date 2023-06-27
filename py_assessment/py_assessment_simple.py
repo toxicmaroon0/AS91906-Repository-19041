@@ -25,6 +25,7 @@ class Calculator():
         row = 1
         col = 0
         self.is_final = 0
+        global questionWindow
         
         # get screen width and height
         ws = root.winfo_screenwidth() # width of the screen
@@ -32,7 +33,7 @@ class Calculator():
         x = ((ws/2) - (W/2))
         y = 0-hs
         
-        questionwindow.geometry('%dx%d+%d+%d' % (W, H, x, y))
+        questionWindow.geometry('%dx%d+%d+%d' % (2*W, H, x, y))
         root.geometry('%dx%d' % (W, H))
         
         # Buttons
@@ -125,7 +126,6 @@ class Calculator():
         
 #Define Window name
 root = tk.Tk()
-questionwindow = tk.Tk()
 #Create & configure frame
 background = tk.Frame(root)
 background.grid(row=1,column=0,sticky="NSEW")
@@ -136,7 +136,5 @@ root.wm_attributes('-alpha', 0.92)
 root.resizable(RESIZE_YN,RESIZE_YN)
 #Call class logic and buttons
 Calculator()
-quizPage()
 #Refresh window
 root.mainloop()
-questionwindow.mainloop()

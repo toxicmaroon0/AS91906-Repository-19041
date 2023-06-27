@@ -11,7 +11,7 @@ __source__ = '''http://pyparsing.wikispaces.com/file/view/fourFn.py
 http://pyparsing.wikispaces.com/message/view/home/15549426
 '''
 __note__ = '''
-All I've done is rewrap Paul McGuire's fourFn.py as a class, so I can use it
+Rewrap of Paul McGuire's fourFn.py as a class, so it can be used
 more easily in other places.
 '''
 
