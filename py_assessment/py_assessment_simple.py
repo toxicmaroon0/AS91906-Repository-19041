@@ -9,6 +9,7 @@ import math
 import numpy as np
 from py_tooltip import *
 from py_numeric_parser_class import *
+from py_test_page import *
 
 #Create objects / instanses / CONSTANTS
 nsp = NumericStringParser()
@@ -83,10 +84,6 @@ class Calculator():
         #Lists
         self.operators = ["+", "-", "÷", "×", "(INV)", "%", "="]
 
-    def quizQuestionMaker(self, entry_frame):
-        #for i in
-        pass
-
     def button_click(self, event):
         button = event.widget
         text = button["text"]
@@ -139,5 +136,7 @@ root.wm_attributes('-alpha', 0.92)
 root.resizable(RESIZE_YN,RESIZE_YN)
 #Call class logic and buttons
 Calculator()
+quizPage()
 #Refresh window
 root.mainloop()
+questionwindow.mainloop()
