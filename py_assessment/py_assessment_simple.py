@@ -13,6 +13,9 @@ from py_numeric_parser_class import *
 #Create objects / instanses / CONSTANTS
 nsp = NumericStringParser()
 RESIZE_YN = 0
+W = 180
+H = 320
+
 
 #State Class and subroutines
 class Calculator():
@@ -22,9 +25,18 @@ class Calculator():
         col = 0
         self.is_final = 0
         
+        # get screen width and height
+        ws = root.winfo_screenwidth() # width of the screen
+        hs = root.winfo_screenheight() # height of the screen
+        x = ((ws/2) - (W/2))
+        y = 0-hs
+        
+        questionwindow.geometry('%dx%d+%d+%d' % (W, H, x, y))
+        root.geometry('%dx%d' % (W, H))
+        
         # Buttons
         buttons = [
-            "AC", "±", "%", "÷",
+            "AC", "(INV)", "%", "÷",
             "7", "8", "9", "×",
             "4", "5", "6", "-",
             "1", "2", "3", "+",
@@ -43,9 +55,9 @@ class Calculator():
         
                 
         # Entry Field
-        self.entry_field = tk.Entry(root,font=("Helvetica", 20), justify="right",width=20)
+        self.entry_field = tk.Entry(root,font=("Helvetica", 20), justify="right",width=-20)
         self.entry_field.grid(row=0, column=0,sticky="NSEW")
-        
+        '''
         for x in range(0,4):
             if x <= 1:
                 root.rowconfigure(x, weight=1)
@@ -59,17 +71,25 @@ class Calculator():
             if x <= 3:
                 background.columnconfigure(x, weight=1)
                 continue
-
-        #Button Tooltips
-        #CreateToolTip(,'Exponential notation')
+            '''
+        root.rowconfigure(1, weight=3)
+        root.rowconfigure(0, weight=1)
+        background.rowconfigure(4, weight=1)
+        for unit in range(0,3):
+            background.rowconfigure(unit, weight=1)
+            background.columnconfigure(unit,weight = 1)
+                
         
         #Lists
-        self.operators = ["+", "-", "÷", "×", "±", "%", "="]
+        self.operators = ["+", "-", "÷", "×", "(INV)", "%", "="]
+
+    def quizQuestionMaker(self, entry_frame):
+        #for i in
+        pass
 
     def button_click(self, event):
         button = event.widget
         text = button["text"]
-        res_str = ''
 
         if text == "=":
             self.is_final = 0
@@ -77,7 +97,7 @@ class Calculator():
             entry_content = entry_content.replace('×', '*')
             entry_content = entry_content.replace('÷', '/')
             entry_content = entry_content.replace('%', '/100')
-            entry_content = entry_content.replace('±','*(-1)')
+            entry_content = entry_content.replace('(INV)','*(-1)')
             result = nsp.eval(entry_content)
             self.entry_field.delete(0, tk.END)
             self.entry_field.insert(tk.END, str(result))
@@ -108,16 +128,16 @@ class Calculator():
         
 #Define Window name
 root = tk.Tk()
+questionwindow = tk.Tk()
 #Create & configure frame
 background = tk.Frame(root)
 background.grid(row=1,column=0,sticky="NSEW")
 background.configure(background='lightgrey')
-#Call class logic and buttons
-Calculator()
 #Configure window
 root.title("Calculator")
-root.geometry("250x320")
 root.wm_attributes('-alpha', 0.92)
 root.resizable(RESIZE_YN,RESIZE_YN)
+#Call class logic and buttons
+Calculator()
 #Refresh window
 root.mainloop()
