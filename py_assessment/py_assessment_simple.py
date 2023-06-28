@@ -9,7 +9,7 @@ import math
 import numpy as np
 from py_tooltip import *
 from py_numeric_parser_class import *
-from py_test_page import *
+
 
 #Create objects / instanses / CONSTANTS
 nsp = NumericStringParser()
@@ -33,7 +33,7 @@ class Calculator():
         x = ((ws/2) - (W/2))
         y = 0-hs
         
-        questionWindow.geometry('%dx%d+%d+%d' % (2*W, H, x, y))
+        #questionWindow.geometry('%dx%d+%d+%d' % (2*W, H, x, y))
         root.geometry('%dx%d' % (W, H))
         
         # Buttons
@@ -84,6 +84,10 @@ class Calculator():
         
         #Lists
         self.operators = ["+", "-", "÷", "×", "(INV)", "%", "="]
+    
+    def round_up(self, n, decimals=0):
+        multiplier = 10 ** decimals
+        return math.ceil(n * multiplier) / multiplier
 
     def button_click(self, event):
         button = event.widget
@@ -97,6 +101,15 @@ class Calculator():
             entry_content = entry_content.replace('%', '/100')
             entry_content = entry_content.replace('(INV)','*(-1)')
             result = nsp.eval(entry_content)
+            result = str(result)
+            
+            if len(result) >= 15 and '.' in result:
+                result = float(result)
+                result = self.round_up(result,5)
+            
+            if result[-1] == '0' and result[-2] == '.':
+                result = result.removesuffix('.0')
+                
             self.entry_field.delete(0, tk.END)
             self.entry_field.insert(tk.END, str(result))
             self.is_final = 1
@@ -137,4 +150,6 @@ root.resizable(RESIZE_YN,RESIZE_YN)
 #Call class logic and buttons
 Calculator()
 #Refresh window
+from py_test_page import *
 root.mainloop()
+root.focus()
