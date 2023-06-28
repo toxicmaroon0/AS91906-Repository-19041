@@ -1,11 +1,16 @@
 import tkinter as tk
+from tkinter import *
+from tkinter import ttk
 import time
 from tkinter import messagebox
 import random
-import math
 
 class quizPage():
     def __init__(self) -> None:
+        answer = 0
+        questionsAsked = 0
+        self.answer = answer
+        self.questionsAsked = questionsAsked
         
         #Configure window
         questionWindow.title("Math Quiz")
@@ -42,13 +47,12 @@ class quizPage():
         global count_flag
         count_flag = True
 
-
-        Sub = lambda: self.Submit(answer)
-        
         # create needed widgets
         
-        btn_submit = tk.Button(self.questionWindow, text="Submit", command = Sub)
-        btn_start = tk.Button(self.questionWindow, text="Start", command = self.start)
+        btn_submit = tk.Button(self.questionWindow, text="Submit", command = lambda: self.Submit(self.answer))
+        questionWindow.bind('<Return>',lambda x: [self.Submit(self.answer), questionWindow.focus()])
+        btn_start = tk.Button(self.questionWindow, text="Start", command = lambda: [self.start(), entryWidget.focus_set()])
+        questionWindow.bind('<\>',lambda x: [self.start(), questionWindow.focus_set(), entryWidget.focus_set()])
         btn_submit.pack()
         btn_start.pack()
         label.pack()
@@ -62,18 +66,18 @@ class quizPage():
         operator = ""
         
         if rando == 1:
-            answer = number1 + number2
+            self.answer = number1 + number2
             operator = 'Add'
             context = 'and'
         elif rando ==2:
-            answer = number1 - number2
+            self.answer = number1 - number2
             operator = 'Subtract'
-            context = 'take away'
+            context = 'from'
         elif rando == 3:
             if rando1 == 1:
                 number2 = number2 / 1.5
                 number2 = round(number2)
-            answer = number1 * number2
+            self.answer = number1 * number2
             operator = 'Multiply'
             context = 'and'
         elif rando == 4:
@@ -82,11 +86,17 @@ class quizPage():
                 number2 = round(number2)
             operator = 'Divide'
             context = 'by'
-            answer = number1 / number2
+            self.answer = number1 / number2
             
-        prompt = (str(operator) , str(number1) , context , str(number2))
+        if rando ==2:    
+            prompt = (str(operator) , str(number2) , str(context) , str(number1))
+        else:
+            prompt = (str(operator) , str(number1) , str(context) , str(number2))
         self.labelCreation(prompt)
-        return answer
+        return self.answer
+
+        self.questionsAsked += 1
+
 
     def labelCreation(self,prompt):
         global label1
@@ -95,13 +105,12 @@ class quizPage():
 
     def start(self):
         global count_flag 
-        global answer
         global count
-        answer = self.Questions()
+        self.answer = self.Questions()
         count_flag = True
         count = 0.0
         entryWidget.configure(state='normal')
-        print(answer)
+        print(self.answer)
         while True:
             if count_flag == False:
                 break
@@ -124,20 +133,24 @@ class quizPage():
         if entryWidget.get().strip() == "":
             messagebox.showerror("Tkinter Entry Widget", "Please enter a number.")
 
-        if answer != int(entryWidget.get().strip()):
+        if self.answer != int(entryWidget.get().strip()):
             messagebox.showinfo("Answer", "INCORRECT!")
-            labelstr = 'completed in',str(count),', False'
-            labelstr = ' '.join(labelstr)
+            labelstr = 'completed in ',str(count),' seconds, False'
+            labelstr = ''.join(labelstr)
             self.labelConfig(labelstr, append=True)
             entryWidget.delete(0,tk.END)
             entryWidget.configure(state="readonly")
+            questionWindow.focus()
+            questionWindow.focus_set()
         else:
             messagebox.showinfo("Answer", "CORRECT!\nPlease press 'Start' again for a new question")
-            labelstr = 'completed in',str(count),', Correct'
-            labelstr = ' '.join(labelstr)
+            labelstr = 'completed in ',str(count),' seconds, Correct'
+            labelstr = ''.join(labelstr)
             self.labelConfig(labelstr, append=True)
             entryWidget.delete(0,tk.END)
             entryWidget.configure(state="readonly")
+            questionWindow.focus()
+            questionWindow.focus_set()
             
     def labelConfig(self,string,append=False):
         if append:
