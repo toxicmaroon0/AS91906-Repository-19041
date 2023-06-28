@@ -35,6 +35,8 @@ class quizPage():
         entryWidget = tk.Entry(textFrame,state="readonly")
         entryWidget["width"] = 50
         entryWidget.pack(side=tk.LEFT)
+        while self.questionsAsked > 10:
+            entryWidget.configure(state='readonly')
 
         textFrame.pack()
         
@@ -53,6 +55,10 @@ class quizPage():
         questionWindow.bind('<Return>',lambda x: [self.Submit(self.answer), questionWindow.focus()])
         btn_start = tk.Button(self.questionWindow, text="Start", command = lambda: [self.start(), entryWidget.focus_set()])
         questionWindow.bind('<\>',lambda x: [self.start(), questionWindow.focus_set(), entryWidget.focus_set()])
+        questionWindow.bind('<Escape>',lambda x:[self.quitQuestion()])
+        if self.questionsAsked > 10:
+            questionWindow.unbind_all('<\>')
+            questionWindow.unbind_all('<Return>')
         btn_submit.pack()
         btn_start.pack()
         label.pack()
@@ -64,38 +70,39 @@ class quizPage():
         rando = random.randrange(1,4)
         rando1 = random.randrange(0,1)
         operator = ""
-        
-        if rando == 1:
-            self.answer = number1 + number2
-            operator = 'Add'
-            context = 'and'
-        elif rando ==2:
-            self.answer = number1 - number2
-            operator = 'Subtract'
-            context = 'from'
-        elif rando == 3:
-            if rando1 == 1:
-                number2 = number2 / 1.5
-                number2 = round(number2)
-            self.answer = number1 * number2
-            operator = 'Multiply'
-            context = 'and'
-        elif rando == 4:
-            if rando1 == 1:
-                number2 = number2 / 1.5
-                number2 = round(number2)
-            operator = 'Divide'
-            context = 'by'
-            self.answer = number1 / number2
-            
-        if rando ==2:    
-            prompt = (str(operator) , str(number2) , str(context) , str(number1))
+        if self.questionsAsked <= 10:
+            if rando == 1:
+                self.answer = number1 + number2
+                operator = 'Add'
+                context = 'and'
+            elif rando ==2:
+                self.answer = number1 - number2
+                operator = 'Subtract'
+                context = 'from'
+            elif rando == 3:
+                if rando1 == 1:
+                    number2 = number2 / 1.5
+                    number2 = round(number2)
+                self.answer = number1 * number2
+                operator = 'Multiply'
+                context = 'and'
+            elif rando == 4:
+                if rando1 == 1:
+                    number2 = number2 / 1.5
+                    number2 = round(number2)
+                operator = 'Divide'
+                context = 'by'
+                self.answer = number1 / number2
+                
+            if rando ==2:    
+                prompt = (str(operator) , str(number2) , str(context) , str(number1))
+            else:
+                prompt = (str(operator) , str(number1) , str(context) , str(number2))
+            self.labelCreation(prompt)
+            self.questionsAsked += 1
+            return self.answer
         else:
-            prompt = (str(operator) , str(number1) , str(context) , str(number2))
-        self.labelCreation(prompt)
-        return self.answer
-
-        self.questionsAsked += 1
+            self.labelCreation('You have finished the questionare, restart to try again.')
 
 
     def labelCreation(self,prompt):
@@ -111,7 +118,7 @@ class quizPage():
         count = 0.0
         entryWidget.configure(state='normal')
         print(self.answer)
-        while True:
+        while self.questionsAsked <= 10:
             if count_flag == False:
                 break
             count = round(count, 3)
@@ -161,6 +168,11 @@ class quizPage():
             label1.configure(text=text)
         else:
             label1.configure(text=string)
+    
+    def quitQuestion(self):
+        qQ = bool(messagebox.askquestion('Quit?','Are you sure you want to close the question window?'))
+        if qQ == True:
+            questionWindow.destroy()
 
 #Call logic
 #Create window & Labels refrenced in call

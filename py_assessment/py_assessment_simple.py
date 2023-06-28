@@ -9,23 +9,23 @@ import math
 import numpy as np
 from py_tooltip import *
 from py_numeric_parser_class import *
+from py_assessment_constants import *
 
 
 #Create objects / instanses / CONSTANTS
 nsp = NumericStringParser()
-RESIZE_YN = 0
-W = 180
-H = 320
+
 
 
 #State Class and subroutines
 class Calculator():
     def __init__(self) -> None:
         #Variables
+        text = ''
         row = 1
         col = 0
         self.is_final = 0
-        global questionWindow
+        self.text = text
         
         # get screen width and height
         ws = root.winfo_screenwidth() # width of the screen
@@ -80,10 +80,25 @@ class Calculator():
         for unit in range(0,3):
             background.rowconfigure(unit, weight=1)
             background.columnconfigure(unit,weight = 1)
+        
+        #Keybinds
+        root.bind('<Return>',lambda event: self.fx01)
+        #root.bind('<Key>',self.fxPrintKey)
                 
         
         #Lists
         self.operators = ["+", "-", "÷", "×", "(INV)", "%", "="]
+    
+    def fxPrintKey(self,event):
+        keypress = event.widget
+        text = keypress["text"]
+        print(text)
+    
+    def fx01(self):
+        self.text = '1'
+        self.entry_field.insert(tk.END,self.text)
+        root.update()
+    
     
     def round_up(self, n, decimals=0):
         multiplier = 10 ** decimals
@@ -91,9 +106,9 @@ class Calculator():
 
     def button_click(self, event):
         button = event.widget
-        text = button["text"]
+        self.text = button["text"]
 
-        if text == "=":
+        if self.text == "=":
             self.is_final = 0
             entry_content = self.entry_field.get()
             entry_content = entry_content.replace('×', '*')
@@ -114,22 +129,22 @@ class Calculator():
             self.entry_field.insert(tk.END, str(result))
             self.is_final = 1
         else:
-            self.entry_field.insert(tk.END,text)
+            self.entry_field.insert(tk.END,self.text)
         
-        if text == "AC":
+        if self.text == "AC":
             try:
                 self.entry_field.delete(0, tk.END)
             except:
                 messagebox.showerror("Error", "Could not Clear")
         
-        if text not in self.operators and self.is_final == 1:
+        if self.text not in self.operators and self.is_final == 1:
             self.entry_field.delete(0,tk.END)
             self.is_final = 0
-        if text in self.operators:
+        if self.text in self.operators:
             self.is_final = 0
         
         #Quit Button
-        if text == "Quit":
+        if self.text == "Quit":
             try:
                 root.destroy()
             except:
@@ -151,5 +166,5 @@ root.resizable(RESIZE_YN,RESIZE_YN)
 Calculator()
 #Refresh window
 from py_test_page import *
-root.mainloop()
 root.focus()
+root.mainloop()
