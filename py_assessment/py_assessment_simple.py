@@ -6,7 +6,6 @@ from tkinter import messagebox
 
 #Other things
 import math
-import numpy as np
 from py_tooltip import *
 from py_numeric_parser_class import *
 from py_assessment_constants import *
@@ -80,12 +79,7 @@ class Calculator():
         for unit in range(0,3):
             background.rowconfigure(unit, weight=1)
             background.columnconfigure(unit,weight = 1)
-        
-        #Keybinds
-        root.bind('<Return>',lambda event: self.fx01)
-        #root.bind('<Key>',self.fxPrintKey)
                 
-        
         #Lists
         self.operators = ["+", "-", "÷", "×", "(INV)", "%", "="]
     
@@ -166,5 +160,8 @@ root.resizable(RESIZE_YN,RESIZE_YN)
 Calculator()
 #Refresh window
 from py_test_page import *
-root.focus()
+try:
+    root.focus()
+except:
+    TclError
 root.mainloop()
