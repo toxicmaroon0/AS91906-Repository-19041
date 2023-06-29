@@ -170,9 +170,10 @@ class quizPage():
             label1.configure(text=string)
     
     def quitQuestion(self):
-        qQ = bool(messagebox.askquestion('Quit?','Are you sure you want to close the question window?'))
-        if qQ == True:
+        if bool(messagebox.askquestion('Quit?','Are you sure you want to close the question window?')) == True:
             questionWindow.destroy()
+        else:
+            return
 
 #Call logic
 #Create window & Labels refrenced in call
