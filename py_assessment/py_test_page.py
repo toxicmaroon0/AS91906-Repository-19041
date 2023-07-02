@@ -4,13 +4,16 @@ from tkinter import ttk
 import time
 from tkinter import messagebox
 import random
+from py_assessment_constants import *
 
 class quizPage():
     def __init__(self) -> None:
         answer = 0
         questionsAsked = 0
+        count = 0.0
         self.answer = answer
         self.questionsAsked = questionsAsked
+        self.count = count
         
         #Configure window
         questionWindow.title("Math Quiz")
@@ -46,8 +49,8 @@ class quizPage():
         instructions.pack()
 
         # this will be a global flag
-        global count_flag
         count_flag = True
+        self.count_flag = count_flag
 
         # create needed widgets
         
@@ -62,6 +65,17 @@ class quizPage():
         btn_submit.pack()
         btn_start.pack()
         label.pack()
+        self.label = label
+        
+        # get screen width and height
+        ws = questionWindow.winfo_screenwidth() # width of the screen
+        hs = questionWindow.winfo_screenheight() # height of the screen
+        x = ((ws/2) - (W/2))
+        y = 0-hs
+        
+        questionWindow.geometry('%dx%d+%d+%d' % ((4*W),(H*1.35),x,y))
+        
+        questionWindow.resizable(RESIZE_N,RESIZE_N)
         
     def Questions(self):    
         number1 = random.randrange(1,25)
@@ -111,69 +125,74 @@ class quizPage():
         label1.pack()
 
     def start(self):
-        global count_flag 
-        global count
         self.answer = self.Questions()
-        count_flag = True
-        count = 0.0
+        self.count = 0.0    
+        self.count_flag = True    
         entryWidget.configure(state='normal')
-        print(self.answer)
+        match self.answer == None:
+            case True: print('----\nQuiz finished\nNo new questions')
+            case _: print('----\nNew Question\n Answer = '+str(self.answer))
         while self.questionsAsked <= 10:
-            if count_flag == False:
-                break
-            count = round(count, 3)
+            match self.count_flag == False:
+                case True: break
+            self.count = round(self.count, 3)
             # put the count value into the label
-            label['text'] = str(count)
+            self.label['text'] = str(self.count)
             # wait for 0.1 seconds
             time.sleep(0.1)
             # needed with time.sleep()
             questionWindow.update()
             # increase count
-            count += 0.1
+            self.count += 0.1
+        entryWidget.configure(state='readonly')
 
     def Submit(self,answer):
         """ Display the Entry text value. """
-        global count_flag
 
-        count_flag = False
+        self.count_flag = False
 
         if entryWidget.get().strip() == "":
             messagebox.showerror("Tkinter Entry Widget", "Please enter a number.")
+            self.count_flag = True
+            questionWindow.focus_set()
+            self.start()
 
-        if self.answer != int(entryWidget.get().strip()):
-            messagebox.showinfo("Answer", "INCORRECT!")
-            labelstr = 'completed in ',str(count),' seconds, False'
-            labelstr = ''.join(labelstr)
-            self.labelConfig(labelstr, append=True)
-            entryWidget.delete(0,tk.END)
-            entryWidget.configure(state="readonly")
-            questionWindow.focus()
-            questionWindow.focus_set()
-        else:
-            messagebox.showinfo("Answer", "CORRECT!\nPlease press 'Start' again for a new question")
-            labelstr = 'completed in ',str(count),' seconds, Correct'
-            labelstr = ''.join(labelstr)
-            self.labelConfig(labelstr, append=True)
-            entryWidget.delete(0,tk.END)
-            entryWidget.configure(state="readonly")
-            questionWindow.focus()
-            questionWindow.focus_set()
+        match self.answer != int(entryWidget.get().strip()):
+            case True: 
+                messagebox.showinfo("Answer", "INCORRECT!")
+                labelstr = 'completed in ',str(self.count),' seconds, False'
+                labelstr = ''.join(labelstr)
+                self.labelConfig(labelstr, append=True)
+                entryWidget.delete(0,tk.END)
+                entryWidget.configure(state="readonly")
+                questionWindow.focus()
+                questionWindow.focus_set()
+            case _:
+                messagebox.showinfo("Answer", "CORRECT!\nPlease press 'Start' again for a new question")
+                labelstr = 'completed in ',str(self.count),' seconds, Correct'
+                labelstr = ''.join(labelstr)
+                self.labelConfig(labelstr, append=True)
+                entryWidget.delete(0,tk.END)
+                entryWidget.configure(state="readonly")
+                questionWindow.focus()
+                questionWindow.focus_set()
             
     def labelConfig(self,string,append=False):
-        if append:
-            text = label1.cget('text')
-            text = text,string
-            text = ', '.join(text)
-            
-            label1.configure(text=text)
-        else:
-            label1.configure(text=string)
+        match append == True:
+            case True:
+                text = label1.cget('text')
+                text = text,string
+                text = ', '.join(text)
+                label1.configure(text=text)
+            case _:
+                label1.configure(text=string)
     
     def quitQuestion(self):
-        if bool(messagebox.askquestion('Quit?','Are you sure you want to close the question window?')) == True:
-            questionWindow.destroy()
-        else:
-            return
+        match bool(messagebox.askquestion('Quit?','Are you sure you want to close the question window?')) == True:
+            case True:
+                questionWindow.destroy()
+            case _:
+                return
 
 #Call logic
 #Create window & Labels refrenced in call

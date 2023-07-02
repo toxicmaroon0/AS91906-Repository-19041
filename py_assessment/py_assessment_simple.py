@@ -32,7 +32,6 @@ class Calculator():
         x = ((ws/2) - (W/2))
         y = 0-hs
         
-        #questionWindow.geometry('%dx%d+%d+%d' % (2*W, H, x, y))
         root.geometry('%dx%d' % (W, H))
         
         # Buttons
@@ -155,7 +154,7 @@ background.configure(background='lightgrey')
 #Configure window
 root.title("Calculator")
 root.wm_attributes('-alpha', 0.92)
-root.resizable(RESIZE_YN,RESIZE_YN)
+root.resizable(RESIZE_N,RESIZE_N)
 #Call class logic and buttons
 Calculator()
 #Refresh window

@@ -1,9 +1,8 @@
 # AS91906-Repository-19041
 
 -**Changes;** <br /><br />
-- Seemingly cannot create keybinds for the calculator, so I have given up on that<br />
-- Fixed minor error when closing calculator<br />
-- Attempted to fix error when using keybind to close quiz window (Didn't work)<br />
+- Starting conversion to Match/Case statements instead of if statements<br />
+- Reposiotioned quizWindow to right side of screen, as to not overlap root (Calculator)<br />
 <br />
--**Planned Additions**<br /><br />
-- Shift quiz window to middle of screen
+-**Planned Additions;** <br /><br />
+- Fully convert files to use Match/Case statements
