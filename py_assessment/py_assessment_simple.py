@@ -4,7 +4,6 @@ from tkinter import messagebox
 
 #Other things
 import math
-from py_tooltip import *
 from py_numeric_parser_class import *
 from py_assessment_constants import *
 
