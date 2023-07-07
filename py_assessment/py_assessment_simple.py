@@ -1,7 +1,5 @@
 #Tkinter bits
 import tkinter as tk
-#import tkinter.font as font
-#import tkmacosx as tkm
 from tkinter import messagebox
 
 #Other things
@@ -10,18 +8,15 @@ from py_tooltip import *
 from py_numeric_parser_class import *
 from py_assessment_constants import *
 
-
 #Create objects / instanses / CONSTANTS
 nsp = NumericStringParser()
-
-
 
 #State Class and subroutines
 class Calculator():
     def __init__(self) -> None:
         #Variables
         text = ''
-        row = 1
+        row = 0
         col = 0
         self.is_final = 0
         self.text = text
@@ -87,12 +82,6 @@ class Calculator():
         text = keypress["text"]
         print(text)
     
-    def fx01(self):
-        self.text = '1'
-        self.entry_field.insert(tk.END,self.text)
-        root.update()
-    
-    
     def round_up(self, n, decimals=0):
         multiplier = 10 ** decimals
         return math.ceil(n * multiplier) / multiplier
@@ -111,12 +100,17 @@ class Calculator():
             result = nsp.eval(entry_content)
             result = str(result)
             
-            if len(result) >= 15 and '.' in result:
-                result = float(result)
-                result = self.round_up(result,5)
+            match len(result) >= 15 and '.' in result:
+                case True:
+                    result = float(result)
+                    result = self.round_up(result,5)
+                    result = str(result)
+                case _: pass
             
-            if result[-1] == '0' and result[-2] == '.':
-                result = result.removesuffix('.0')
+            match result[-1] == '0' and result[-2] == '.':
+                case True:
+                    result = result.removesuffix('.0')
+                case _: pass
                 
             self.entry_field.delete(0, tk.END)
             self.entry_field.insert(tk.END, str(result))
@@ -124,24 +118,31 @@ class Calculator():
         else:
             self.entry_field.insert(tk.END,self.text)
         
-        if self.text == "AC":
-            try:
-                self.entry_field.delete(0, tk.END)
-            except:
-                messagebox.showerror("Error", "Could not Clear")
+        match self.text == "AC":
+            case True:
+                try:
+                    self.entry_field.delete(0, tk.END)
+                except:
+                    messagebox.showerror("Error", "Could not Clear")
+            case _: pass
         
-        if self.text not in self.operators and self.is_final == 1:
-            self.entry_field.delete(0,tk.END)
-            self.is_final = 0
-        if self.text in self.operators:
-            self.is_final = 0
+        match self.text not in self.operators and self.is_final == 1:
+            case True:
+                self.entry_field.delete(0,tk.END)
+                self.is_final = 0
+            case _: pass
+        match self.text in self.operators:
+            case True: self.is_final = 0
+            case _: pass
         
         #Quit Button
-        if self.text == "Quit":
-            try:
-                root.destroy()
-            except:
-                root.destroy()
+        match self.text == "Quit":
+            case True:
+                try:
+                    root.destroy()
+                except:
+                    root.destroy()
+            case _: pass
 
         
         

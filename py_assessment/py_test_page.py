@@ -11,9 +11,11 @@ class quizPage():
         answer = 0
         questionsAsked = 0
         count = 0.0
+        bindsHelpAsked = 0
         self.answer = answer
         self.questionsAsked = questionsAsked
         self.count = count
+        self.bindsHelpAsked = bindsHelpAsked
         
         #Configure window
         questionWindow.title("Math Quiz")
@@ -54,8 +56,8 @@ class quizPage():
 
         # create needed widgets
         
-        btn_submit = tk.Button(self.questionWindow, text="Submit", command = lambda: self.Submit(self.answer))
-        questionWindow.bind('<Return>',lambda x: [self.Submit(self.answer), questionWindow.focus()])
+        btn_submit = tk.Button(self.questionWindow, text="Submit", command = lambda: [self.Submit(self.answer)])
+        questionWindow.bind('<Return>',lambda: [self.Submit(self.answer), questionWindow.focus()])
         btn_start = tk.Button(self.questionWindow, text="Start", command = lambda: [self.start(), entryWidget.focus_set()])
         questionWindow.bind('<\>',lambda x: [self.start(), questionWindow.focus_set(), entryWidget.focus_set()])
         questionWindow.bind('<Escape>',lambda x:[self.quitQuestion()])
@@ -73,7 +75,7 @@ class quizPage():
         x = ((ws/2) - (W/2))
         y = 0-hs
         
-        questionWindow.geometry('%dx%d+%d+%d' % ((4*W),(H*1.35),x,y))
+        questionWindow.geometry('%dx%d+%d+%d' % ((4*W),(H*1.28),x,y))
         
         questionWindow.resizable(RESIZE_N,RESIZE_N)
         
@@ -84,7 +86,7 @@ class quizPage():
         rando = random.randrange(1,4)
         rando1 = random.randrange(0,1)
         operator = ""
-        if self.questionsAsked <= 10:
+        if self.questionsAsked < 10:
             if rando == 1:
                 self.answer = number1 + number2
                 operator = 'Add'
@@ -125,6 +127,7 @@ class quizPage():
         label1.pack()
 
     def start(self):
+        self.keyBindings()
         self.answer = self.Questions()
         self.count = 0.0    
         self.count_flag = True    
@@ -193,6 +196,13 @@ class quizPage():
                 questionWindow.destroy()
             case _:
                 return
+    
+    def keyBindings(self):
+        match self.bindsHelpAsked == 1:
+            case True:
+                messagebox.showinfo("Keybind information","Keybind Information;\n[Return]: Submit Answer\n[\]: Generate new question\n[Esc]: Opme window cloase dialogue")
+                self.bindsHelpAsked = 1
+            case _: pass
 
 #Call logic
 #Create window & Labels refrenced in call
