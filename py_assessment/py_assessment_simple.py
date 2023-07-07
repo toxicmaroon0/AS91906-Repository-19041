@@ -52,21 +52,6 @@ class Calculator():
         # Entry Field
         self.entry_field = tk.Entry(root,font=("Helvetica", 20), justify="right",width=-20)
         self.entry_field.grid(row=0, column=0,sticky="NSEW")
-        '''
-        for x in range(0,4):
-            if x <= 1:
-                root.rowconfigure(x, weight=1)
-                continue
-            if x == 0:
-                root.columnconfigure(x, weight=1)
-                continue
-            if x <= 4:
-                background.rowconfigure(x, weight=1)
-                continue
-            if x <= 3:
-                background.columnconfigure(x, weight=1)
-                continue
-            '''
         root.rowconfigure(1, weight=3)
         root.rowconfigure(0, weight=1)
         background.rowconfigure(4, weight=1)
@@ -76,11 +61,6 @@ class Calculator():
                 
         #Lists
         self.operators = ["+", "-", "÷", "×", "(INV)", "%", "="]
-    
-    def fxPrintKey(self,event):
-        keypress = event.widget
-        text = keypress["text"]
-        print(text)
     
     def round_up(self, n, decimals=0):
         multiplier = 10 ** decimals
